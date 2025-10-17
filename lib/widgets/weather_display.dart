@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class WeatherDisplay extends StatefulWidget {
@@ -13,6 +15,14 @@ class _WeatherDisplayState extends State<WeatherDisplay> {
   String? _error;
   bool _useFahrenheit = false;
   String _selectedCity = 'New York';
+  Timer? _timer; 
+
+@override
+void dispose() {
+  _timer?.cancel();
+  super.dispose();
+}
+
 
   final List<String> _cities = ['New York', 'London', 'Tokyo', 'Invalid City'];
 
@@ -239,14 +249,26 @@ class WeatherData {
   });
 
   
-  factory WeatherData.fromJson(Map<String, dynamic>? json) {
+factory WeatherData.fromJson(Map<String, dynamic>? json) {
+  if (json == null) {
     return WeatherData(
-      city: json!['city'],
-      temperatureCelsius: json['temperature'].toDouble(),
-      description: json['description'],
-      humidity: json['humidity'], 
-      windSpeed: json['windSpeed'].toDouble(), 
-      icon: json['icon'], 
+      city: 'Unknown',
+      temperatureCelsius: 0.0,
+      description: 'No data',
+      humidity: 0,
+      windSpeed: 0.0,
+      icon: '❌',
     );
   }
+
+  return WeatherData(
+    city: json['city'] ?? 'Unknown',
+    temperatureCelsius: (json['temperature'] ?? 0).toDouble(),
+    description: json['description'] ?? 'No data',
+    humidity: json['humidity'] ?? 0,
+    windSpeed: (json['windSpeed'] ?? 0).toDouble(),
+    icon: json['icon'] ?? '❌',
+  );
+}
+
 }

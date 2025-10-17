@@ -44,7 +44,8 @@ void main() {
       await tester.pump();
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-      await tester.pump(const Duration(seconds: 2));
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+
 
       expect(find.text('Registration successful!'), findsOneWidget);
       expect(find.text('Register'), findsOneWidget);
